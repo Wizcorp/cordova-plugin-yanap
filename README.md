@@ -12,13 +12,8 @@ Main features we have in mind while developing it are:
 var Yanap = cordova.plugins.Yanap;
 
 var myBackgroundLoop = new Yanap.AudioInstance(Yanap.AUDIO_TYPE.LOOP);
-
-myBackgroundLoop.load('audio/bg.mp3', function (err) {
-	if (err) {
-		return console.error(err);
-	}
-	myBackgroundLoop.play();
-});
+myBackgroundLoop.load('audio/bg.mp3');
+myBackgroundLoop.play();
 
 // and when it is not needed anymore...
 // myBackgroundLoop.stop();
@@ -64,11 +59,11 @@ Audio instance constructor.
 ```javascript
 var mySong = new Yanap.AudioInstance(
 	Yanap.AUDIO_TYPE.MUSIC,
-	function (status, additionalInfo) {
+	function onStatusUpdate(status, additionalInfo) {
 		if (status === Yanap.AUDIO_INSTANCE_STATUS.ERROR) {
 			return console.error('error: ' + additionalInfo);
-			console.log('new status: ' + status);
 		}
+		console.log('new status: ' + status);
 	}
 );
 ```
@@ -81,15 +76,18 @@ Used to load a file.
 - `filePath` is a string relative to the `cache` directory.
 
 ```javascript
-// example 1: if you want to be sure that audio is ready before trying to play
+// example 1: if you want to be sure that audio is ready before trying to play it
 var myLaserFx = new Yanap.AudioInstance(Yanap.AUDIO_TYPE.SOUND, function (status) {
+	if (status === Yanap.AUDIO_INSTANCE_STATUS.ERROR) {
+		return console.error('error: ' + additionalInfo);
+	}
 	if (status === Yanap.AUDIO_INSTANCE_STATUS.LOADED) {
 		myLaserFx.play();
 	}
 });
 myLaserFx.load('audio/laser.mp3');
 
-// example 2: if you want to play automatically when loaded
+// example 2: if you want to play automatically when loaded and don't care about errors
 var myLaserFx = new Yanap.AudioInstance(Yanap.AUDIO_TYPE.SOUND);
 myLaserFx.load('audio/laser.mp3');
 myLaserFx.play();
@@ -97,10 +95,22 @@ myLaserFx.play();
 
 ### Yanap.AudioInstance.play()
 
+Used to start or resume an audio instance playback.
+
 ### Yanap.AudioInstance.stop()
+
+Used to interrupt an audio instance playback.
 
 ### Yanap.AudioInstance.setVolume(channel1, channel2)
 
+Set audio volume.
+- `channel1` and `channel2` represents the left and right speakers.
+- Values are in a range of `0.0` ~ `1.0`.
+
 ### Yanap.AudioInstance.release()
 
+Has to be called when you don't need an audio instance anymore. It's automatically stopping playback before releasing all resources.
+
 ### Yanap.releaseAll()
+
+Static method used to stop and release all audio instances.
