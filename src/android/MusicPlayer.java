@@ -20,7 +20,6 @@ public class MusicPlayer extends YanapPlayer {
     public static final String TAG = MusicPlayer.class.getSimpleName();
 
     private MediaPlayer mediaPlayer = null;
-    private float volume1, volume2; // TODO: rename to volumeR/volumeL
 
     private boolean playPending = false;
     private boolean releasePending = false;
@@ -30,11 +29,8 @@ public class MusicPlayer extends YanapPlayer {
     // -------------------------------
 
     public MusicPlayer(Yanap yanap, AssetFileDescriptor afd, String uid, float volume) {
-        this.yanap = yanap;
-        this.uid = uid;
+        super(yanap, uid, volume);
         stateUpdate(Yanap.STATE.LOADING);
-        this.volume1 = volume;
-        this.volume2 = volume;
 
         mediaPlayer = new MediaPlayer();
         mediaPlayer.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
@@ -106,8 +102,7 @@ public class MusicPlayer extends YanapPlayer {
 
     @Override
     public void setVolume(float volume1, float volume2) {
-        this.volume1 = volume1;
-        this.volume2 = volume2;
+        super.setVolume(volume1, volume2);
         if (mediaPlayer != null) {
             mediaPlayer.setVolume(volume1, volume2);
         }

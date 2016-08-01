@@ -36,8 +36,6 @@ public class SoundPlayer extends YanapPlayer {
 
     private int soundId = -1;
     private int priority = 0;
-    private AssetFileDescriptor afd;
-    private float volume1, volume2; // TODO: rename to volumeR/volumeL
     private int streamId = 0;
 
     private boolean playPending = false;
@@ -48,14 +46,10 @@ public class SoundPlayer extends YanapPlayer {
     // -------------------------------
 
     public SoundPlayer(Yanap yanap, AssetFileDescriptor afd, String uid, int priority, float volume) {
+        super(yanap, uid, volume);
         if (soundPool == null) createSoundPool(MAX_CHANNELS); // only one SoundPool for all SoundPlayers
-        this.yanap = yanap;
-        this.uid = uid;
         stateUpdate(Yanap.STATE.LOADING);
         this.priority = priority;
-        this.afd = afd;
-        this.volume1 = volume;
-        this.volume2 = volume;
 
         this.soundId = soundPool.load(afd, priority);
         soundIdToSoundPlayer.put(this.soundId, this);
@@ -148,8 +142,7 @@ public class SoundPlayer extends YanapPlayer {
 
     @Override
     public void setVolume(float volume1, float volume2) {
-        this.volume1 = volume1;
-        this.volume2 = volume2;
+        super.setVolume(volume1, volume2);
         if (streamId == 0) return;
         soundPool.setVolume(this.soundId, volume1, volume2);
     }
@@ -175,8 +168,6 @@ public class SoundPlayer extends YanapPlayer {
         priority = 0;
         streamId = 0;
 
-        // if (afd != null) afd.close(); // TODO: is this required?
-        afd = null;
         stateUpdate(Yanap.STATE.RELEASED);
         yanap = null;
         uid = null;
