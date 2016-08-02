@@ -13,7 +13,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.File;
-import java.io.FileNotFoundException;
+import java.lang.reflect.Method;
 import java.util.HashMap;
 
 import android.util.Log;
@@ -64,14 +64,9 @@ public class Yanap extends CordovaPlugin {
         if (action.equals("createAudioInstance")) {
             createAudioInstance(args);
             callbackContext.success();
-        } else if (action.equals("play")) {
-            play(args);
-            callbackContext.success();
-        } else if (action.equals("stop")) {
-            stop(args);
-            callbackContext.success();
-        } else if (action.equals("release")) {
-            release(args);
+        } else if (action.equals("play") || action.equals("stop") || action.equals("release")) {
+            String uid = args.getString(0);
+            arglessExec(action, uid);
             callbackContext.success();
         } else if (action.equals("setVolume")) {
             setVolume(args);
@@ -124,41 +119,20 @@ public class Yanap extends CordovaPlugin {
     }
 
     // -------------------------------
-    // ------- Interface: PLAY -------
+    // - Interface: ARG-LESS METHODS -
     // -------------------------------
 
-    private void play(JSONArray args) throws JSONException {
-        String uid = args.getString(0);
+    private void arglessExec(String method, String uid) throws JSONException {
         if (yanapPlayers.containsKey(uid)) {
-            yanapPlayers.get(uid).play();
+            try {
+                // retrieve and call the method
+                Method m = IYanapPlayer.class.getMethod(method, null);
+                m.invoke(yanapPlayers.get(uid), null);
+            } catch (Exception e) {
+                Log.e(TAG, "Exception " + e.getClass() + ". Most likely `" + method + "` method is unknown.");
+            }
         } else {
-            statusUpdate(uid, STATE.ERROR, "(play) audioInstance `" + uid + "` not found");
-        }
-    }
-
-    // -------------------------------
-    // ------- Interface: STOP -------
-    // -------------------------------
-
-    private void stop(JSONArray args) throws JSONException {
-        String uid = args.getString(0);
-        if (yanapPlayers.containsKey(uid)) {
-            yanapPlayers.get(uid).stop();
-        } else {
-            statusUpdate(uid, STATE.ERROR, "(stop) audioInstance `" + uid + "` not found");
-        }
-    }
-
-    // -------------------------------
-    // ------ Interface: RELEASE -----
-    // -------------------------------
-
-    private void release(JSONArray args) throws JSONException {
-        String uid = args.getString(0);
-        if (yanapPlayers.containsKey(uid)) {
-            yanapPlayers.get(uid).release();
-        } else {
-            statusUpdate(uid, STATE.ERROR, "(release) audioInstance `" + uid + "` not found");
+            statusUpdate(uid, STATE.ERROR, "(" + method + ") audioInstance `" + uid + "` not found");
         }
     }
 
@@ -168,9 +142,9 @@ public class Yanap extends CordovaPlugin {
 
     private void setVolume(JSONArray args) throws JSONException {
         String uid = args.getString(0);
-        float volume1 = (float) args.getDouble(1);
-        float volume2 = (float) args.getDouble(2);
         if (yanapPlayers.containsKey(uid)) {
+            float volume1 = (float) args.getDouble(1);
+            float volume2 = (float) args.getDouble(2);
             yanapPlayers.get(uid).setVolume(volume1, volume2);
         } else {
             statusUpdate(uid, STATE.ERROR, "(setVolume) audioInstance `" + uid + "` not found");
