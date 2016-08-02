@@ -27,7 +27,6 @@ public class LoopPlayer extends YanapPlayer {
     private MediaPlayer mCurrentPlayer = null;
     private MediaPlayer mNextPlayer = null;
     private AssetFileDescriptor afd;
-    private float volume1, volume2; // TODO: rename to volumeR/volumeL
 
     private boolean playPending = false;
     private boolean releasePending = false;
@@ -38,12 +37,9 @@ public class LoopPlayer extends YanapPlayer {
     // -------------------------------
 
     public LoopPlayer(Yanap yanap, AssetFileDescriptor afd, String uid, float volume) {
-        this.yanap = yanap;
-        this.uid = uid;
+        super(yanap, uid, volume);
         stateUpdate(Yanap.STATE.LOADING);
         this.afd = afd;
-        this.volume1 = volume;
-        this.volume2 = volume;
 
         mCurrentPlayer = new MediaPlayer();
         mCurrentPlayer.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
@@ -165,8 +161,7 @@ public class LoopPlayer extends YanapPlayer {
 
     @Override
     public void setVolume(float volume1, float volume2) {
-        this.volume1 = volume1;
-        this.volume2 = volume2;
+        super.setVolume(volume1, volume2);
         if (mCurrentPlayer != null) {
             mCurrentPlayer.setVolume(volume1, volume2);
         }
