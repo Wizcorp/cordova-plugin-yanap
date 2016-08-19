@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<plugin xmlns="http://apache.org/cordova/ns/plugins/1.0" xmlns:android="http://schemas.android.com/apk/res/android" id="cordova-plugin-yanap" version="0.8.2">
+<plugin xmlns="http://apache.org/cordova/ns/plugins/1.0" xmlns:android="http://schemas.android.com/apk/res/android" id="cordova-plugin-yanap" version="0.8.3">
   <name>Yanap</name>
   <js-module name="Yanap" src="www/Yanap.js">
     <clobbers target="cordova.plugins.Yanap"/>
@@ -11,9 +11,11 @@
       </feature>
     </config-file>
     <config-file parent="/*" target="AndroidManifest.xml"/>
-    <source-file src="src/android/Yanap.java" target-dir="src/cordovaPluginYanap"/>
+    <source-file src="src/android/IYanapPlayer.java" target-dir="src/cordovaPluginYanap"/>
     <source-file src="src/android/LoopPlayer.java" target-dir="src/cordovaPluginYanap"/>
     <source-file src="src/android/MusicPlayer.java" target-dir="src/cordovaPluginYanap"/>
     <source-file src="src/android/SoundPlayer.java" target-dir="src/cordovaPluginYanap"/>
+    <source-file src="src/android/Yanap.java" target-dir="src/cordovaPluginYanap"/>
+    <source-file src="src/android/YanapPlayer.java" target-dir="src/cordovaPluginYanap"/>
   </platform>
 </plugin>
