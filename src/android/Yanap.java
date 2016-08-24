@@ -126,8 +126,8 @@ public class Yanap extends CordovaPlugin {
         if (yanapPlayers.containsKey(uid)) {
             try {
                 // retrieve and call the method
-                Method m = IYanapPlayer.class.getMethod(method, null);
-                m.invoke(yanapPlayers.get(uid), null);
+                Method m = IYanapPlayer.class.getMethod(method);
+                m.invoke(yanapPlayers.get(uid));
             } catch (Exception e) {
                 Log.e(TAG, "Exception " + e.getClass() + ". Most likely `" + method + "` method is unknown.");
             }
