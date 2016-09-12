@@ -49,6 +49,7 @@ public class SoundPlayer extends YanapPlayer {
         super(yanap, uid, volume);
         if (soundPool == null) createSoundPool(MAX_CHANNELS); // only one SoundPool for all SoundPlayers
         stateUpdate(Yanap.STATE.LOADING);
+        yanap.sendFileLength(this.uid, afd.getLength());
         this.priority = priority;
 
         this.soundId = soundPool.load(afd, priority);

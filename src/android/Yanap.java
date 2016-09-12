@@ -179,4 +179,18 @@ public class Yanap extends CordovaPlugin {
             return;
         }
     }
+
+    // Transmit the file size to JS
+    public void sendFileLength(String uid, long length) {
+        JSONObject message = new JSONObject();
+        try {
+            message.put("msgType", "fileLength");
+            message.put("audioUid", uid);
+            message.put("fileLength", length);
+            transmitToJs(message);
+        } catch (JSONException e) {
+            Log.e(TAG, "Failed to send file length", e);
+            return;
+        }
+    }
 }
