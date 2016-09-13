@@ -104,6 +104,8 @@ public class Yanap extends CordovaPlugin {
         }
         YanapPlayer yanapPlayer = null;
 
+        sendFileLength(uid, afd.getLength());
+
         if (audioType.equals("loop")) {
             yanapPlayer = new LoopPlayer(this, afd, uid, 1.0f);
         } else if (audioType.equals("music")) {
@@ -176,6 +178,20 @@ public class Yanap extends CordovaPlugin {
             transmitToJs(message);
         } catch (JSONException e) {
             Log.e(TAG, "Failed to create status details", e);
+            return;
+        }
+    }
+
+    // Transmit the file size to JS
+    public void sendFileLength(String uid, long length) {
+        JSONObject message = new JSONObject();
+        try {
+            message.put("msgType", "fileLength");
+            message.put("audioUid", uid);
+            message.put("fileLength", length);
+            transmitToJs(message);
+        } catch (JSONException e) {
+            Log.e(TAG, "Failed to send file length", e);
             return;
         }
     }

@@ -39,6 +39,7 @@ function AudioInstance(audioType, onStatusUpdate) {
     this.onStatusUpdate = onStatusUpdate;
     this.filePath = null;
     this.status = null;
+    this.fileLength = -1;
     setStatus(this.uid, AUDIO_INSTANCE_STATUS.EMPTY);
 }
 
@@ -113,8 +114,9 @@ function setStatus(uid, status, additionalInfo) {
 };
 
 function onNativeMessage(msg) {
-    if (msg.msgType == 'statusUpdate') {
-        var audioUid = msg.audioUid;
+    var audioUid = null;
+    if (msg.msgType === 'statusUpdate') {
+        audioUid = msg.audioUid;
         if (!audioInstances[audioUid]) {
             return console.warn('Yanap (statusUpdate, ' + msg.newStatus + '): unknown audioInstance `' + audioUid + '`');
         }
@@ -125,6 +127,12 @@ function onNativeMessage(msg) {
         if (AUDIO_INSTANCE_STATUS[msg.newStatus] === AUDIO_INSTANCE_STATUS.RELEASED) {
             cleanup(audioUid);
         }
+    } else if (msg.msgType === 'fileLength') {
+        audioUid = msg.audioUid;
+        if (!audioInstances[audioUid]) {
+            return console.warn('Yanap (fileLength message: unknown audioInstance `' + audioUid + '`');
+        }
+        audioInstances[audioUid].fileLength = msg.fileLength;
     } else {
         return console.error(new Error('Yanap (onNativeMessage): received an unknown native message: ' + JSON.stringify(msg)));
     }
