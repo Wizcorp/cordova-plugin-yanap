@@ -40,6 +40,7 @@ public class LoopPlayer extends YanapPlayer {
         super(yanap, uid, volume);
         stateUpdate(Yanap.STATE.LOADING);
         this.afd = afd;
+        
         mCurrentPlayer = new MediaPlayer();
         mCurrentPlayer.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
             @Override
