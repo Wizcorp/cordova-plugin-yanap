@@ -1,6 +1,6 @@
 {
   "name": "cordova-plugin-yanap",
-  "version": "0.8.5",
+  "version": "0.8.6",
   "description": "Yet Another Native Audio Plugin for Cordova",
   "repository": {
     "type": "git",

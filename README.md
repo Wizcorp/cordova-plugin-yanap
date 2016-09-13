@@ -111,6 +111,10 @@ Set audio volume.
 
 Has to be called when you don't need an audio instance anymore. It's automatically stopping playback before releasing all resources.
 
+### Yanap.AudioInstance.fileLength
+
+Size of the audio file in bytes. Default is `-1`.
+
 ### Yanap.releaseAll()
 
 Static method used to stop and release all audio instances.
