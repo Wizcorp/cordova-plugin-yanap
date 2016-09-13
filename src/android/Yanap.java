@@ -115,6 +115,7 @@ public class Yanap extends CordovaPlugin {
             return;
         }
 
+        sendFileLength(uid, afd.getLength());
         yanapPlayers.put(uid, yanapPlayer);
     }
 

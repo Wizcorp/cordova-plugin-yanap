@@ -31,8 +31,6 @@ public class MusicPlayer extends YanapPlayer {
     public MusicPlayer(Yanap yanap, AssetFileDescriptor afd, String uid, float volume) {
         super(yanap, uid, volume);
         stateUpdate(Yanap.STATE.LOADING);
-        yanap.sendFileLength(this.uid, afd.getLength());
-
         mediaPlayer = new MediaPlayer();
         mediaPlayer.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
             @Override

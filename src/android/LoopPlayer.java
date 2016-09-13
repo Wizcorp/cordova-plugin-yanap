@@ -39,7 +39,6 @@ public class LoopPlayer extends YanapPlayer {
     public LoopPlayer(Yanap yanap, AssetFileDescriptor afd, String uid, float volume) {
         super(yanap, uid, volume);
         stateUpdate(Yanap.STATE.LOADING);
-        yanap.sendFileLength(this.uid, afd.getLength());
         this.afd = afd;
         mCurrentPlayer = new MediaPlayer();
         mCurrentPlayer.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
