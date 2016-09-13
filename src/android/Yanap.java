@@ -104,6 +104,8 @@ public class Yanap extends CordovaPlugin {
         }
         YanapPlayer yanapPlayer = null;
 
+        sendFileLength(uid, afd.getLength());
+
         if (audioType.equals("loop")) {
             yanapPlayer = new LoopPlayer(this, afd, uid, 1.0f);
         } else if (audioType.equals("music")) {
@@ -115,7 +117,6 @@ public class Yanap extends CordovaPlugin {
             return;
         }
 
-        sendFileLength(uid, afd.getLength());
         yanapPlayers.put(uid, yanapPlayer);
     }
 
