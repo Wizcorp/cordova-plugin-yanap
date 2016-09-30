@@ -74,7 +74,9 @@ public class SoundPlayer extends YanapPlayer {
                 if (status != 0) {
                     soundPlayer.stateUpdate(Yanap.STATE.ERROR, "unable to load file (status " + status + ")");
                 }
-                if (soundPlayer.state == Yanap.STATE.ERROR) { return; }
+                if (soundPlayer.state == Yanap.STATE.ERROR || soundPlayer.state == Yanap.STATE.RELEASED) {
+                    return;
+                }
                 soundPlayer.stateUpdate(Yanap.STATE.LOADED);
 
                 if (soundPlayer.playPending && !soundPlayer.releasePending) {
