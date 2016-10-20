@@ -96,7 +96,7 @@ public class Yanap extends CordovaPlugin {
         }
 
         final File cacheFile;
-        if (filePath.length() >= 7 && filePath.toLowerCase().startsWith("file://")) {
+        if (filePath.toLowerCase().startsWith("file://")) {
             cacheFile = new File(URI.create(filePath));
         } else {
             cacheFile = new File(cordova.getActivity().getApplicationContext().getCacheDir(), filePath);
