@@ -14,6 +14,7 @@ import org.json.JSONObject;
 
 import java.io.File;
 import java.lang.reflect.Method;
+import java.net.URI;
 import java.util.HashMap;
 
 import android.util.Log;
@@ -94,7 +95,13 @@ public class Yanap extends CordovaPlugin {
             return;
         }
 
-        final File cacheFile = new File(cordova.getActivity().getApplicationContext().getCacheDir(), filePath);
+        final File cacheFile;
+        if (filePath.toLowerCase().startsWith("file://")) {
+            cacheFile = new File(URI.create(filePath));
+        } else {
+            cacheFile = new File(cordova.getActivity().getApplicationContext().getCacheDir(), filePath);
+        }
+
         AssetFileDescriptor afd;
         try {
             afd = new AssetFileDescriptor(ParcelFileDescriptor.open(cacheFile, ParcelFileDescriptor.MODE_READ_ONLY), 0, -1);
