@@ -73,7 +73,10 @@ This creation is successful even if audio type is invalid (it would fail during 
 ### Yanap.AudioInstance.load(filePath)
 
 Used to load a file.
-- `filePath` is a string relative to the `cache` directory.
+- `filePath` is a string:
+    - relative to application asset folder if string starts with `file:///android_asset/`
+    - *else* an absolute path if string starts with `file://`
+    - *else* a relative path to application `cache` directory
 
 ```javascript
 // example 1: if you want to be sure that audio is ready before trying to play it

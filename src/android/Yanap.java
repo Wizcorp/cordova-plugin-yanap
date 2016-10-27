@@ -30,6 +30,9 @@ public class Yanap extends CordovaPlugin {
     // Log TAG definition
     public static final String TAG = Yanap.class.getSimpleName();
 
+    // Url prefix used to indicate a file located in the package
+    public static final String LOCAL_PATH_PREFIX = "file:///android_asset/";
+
     // States used by the players
     public enum STATE {
         NONE,     // LoopPlayer, MusicPlayer, SoundPlayer
@@ -95,20 +98,29 @@ public class Yanap extends CordovaPlugin {
             return;
         }
 
-        final File cacheFile;
-        if (filePath.toLowerCase().startsWith("file://")) {
-            cacheFile = new File(URI.create(filePath));
+        AssetFileDescriptor afd;
+        if (filePath.toLowerCase().startsWith(LOCAL_PATH_PREFIX)) { // apk relative path
+            try {
+                afd = cordova.getActivity().getApplicationContext().getAssets().openFd(filePath.substring(LOCAL_PATH_PREFIX.length()));
+            } catch (java.io.IOException e) {
+                statusUpdate(uid, STATE.ERROR, "unable to open file `" + filePath + "`");
+                return;
+            }
         } else {
-            cacheFile = new File(cordova.getActivity().getApplicationContext().getCacheDir(), filePath);
+            final File cacheFile;
+            if (filePath.toLowerCase().startsWith("file://")) { // full absolute path
+                cacheFile = new File(URI.create(filePath));
+            } else { // application cache relative path
+                cacheFile = new File(cordova.getActivity().getApplicationContext().getCacheDir(), filePath);
+            }
+            try {
+                afd = new AssetFileDescriptor(ParcelFileDescriptor.open(cacheFile, ParcelFileDescriptor.MODE_READ_ONLY), 0, -1);
+            } catch (java.io.FileNotFoundException e) {
+                statusUpdate(uid, STATE.ERROR, "unable to open file `" + filePath + "` at `" + cacheFile.getAbsolutePath() + "`");
+                return;
+            }
         }
 
-        AssetFileDescriptor afd;
-        try {
-            afd = new AssetFileDescriptor(ParcelFileDescriptor.open(cacheFile, ParcelFileDescriptor.MODE_READ_ONLY), 0, -1);
-        } catch (java.io.FileNotFoundException e) {
-            statusUpdate(uid, STATE.ERROR, "unable to open file `" + filePath + "` at `" + cacheFile.getAbsolutePath() + "`");
-            return;
-        }
         YanapPlayer yanapPlayer = null;
 
         sendFileLength(uid, afd.getLength());
