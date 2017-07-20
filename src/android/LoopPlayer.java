@@ -8,8 +8,6 @@ import android.content.res.AssetFileDescriptor;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
 
-import org.chromium.base.Log;
-
 import java.io.IOException;
 
 // -------------------------------
